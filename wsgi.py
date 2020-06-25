@@ -1,2 +1,2 @@
-from __main__ import app
+from aplicacion import crear__app
 app = crear__app()

@@ -6,24 +6,24 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 app.config.from_pyfile('configPosgreSQL.py')
 
-from models import db 
+from models import db
 from models import Usuario, Comentario
-		
+
 @app.route('/')
 def inicio():
-	return render_template('inicio.html')	
+	return render_template('inicio.html')
 @app.route('/nuevo_usuario', methods = ['GET','POST'])
-def nuevo_usuario():   
+def nuevo_usuario():
 	if request.method == 'POST':
 		if not request.form['nombre'] or not request.form['email'] or not request.form['password']:
 			return render_template('error.html', error="Los datos ingresados no son correctos...")
 		else:
-			nuevo_usuario = Usuario(nombre=request.form['nombre'], correo = request.form['email'], clave=generate_password_hash(request.form['password']))       
+			nuevo_usuario = Usuario(nombre=request.form['nombre'], correo = request.form['email'], clave=generate_password_hash(request.form['password']))
 			db.session.add(nuevo_usuario)
 			db.session.commit()
 			return render_template('aviso.html', mensaje="El usuario se registró exitosamente")
 	return render_template('nuevo_usuario.html')
-	
+
 @app.route('/nuevo_comentario', methods = ['GET','POST'])
 def nuevo_comentario():
     if request.method == 'POST':
@@ -35,7 +35,7 @@ def nuevo_comentario():
                 return render_template('error.html', error="El correo no está registrado")
             else:
                 verificacion = check_password_hash(usuario_actual.clave, request.form['password'])
-                if (verificacion):                    
+                if (verificacion):
                     return render_template('ingresar_comentario.html', usuario = usuario_actual)
                 else:
                     return render_template('error.html', error="La contraseña no es válida")
@@ -47,29 +47,24 @@ def ingresar_comentario():
     if request.method == 'POST':
         if not request.form['contenido']:
             return render_template('error.html', error="Contenido no ingresado...")
-        else:            
-            nuevo_comentario= Comentario(fecha=datetime.now(), contenido=request.form['contenido'], usuario_id =request.form['userId'])    
+        else:
+            nuevo_comentario= Comentario(fecha=datetime.now(), contenido=request.form['contenido'], usuario_id =request.form['userId'])
             db.session.add(nuevo_comentario)
             db.session.commit()
-            return render_template('inicio.html') 
-    return render_template('inicio.html') 
+            return render_template('inicio.html')
+    return render_template('inicio.html')
 
 @app.route('/listar_comentarios')
 def listar_comentarios():
    return render_template('listar_comentario.html', comentarios = Comentario.query.all())
 
 @app.route('/listar_comentarios_usuario', methods = ['GET', 'POST'])
-def listar_comentarios_usuario():  
+def listar_comentarios_usuario():
     if request.method == 'POST':
         if not request.form['usuarios']:
 			#Pasa como parámetro todos los usuarios
             return render_template('listar_comentario_usuario.html', usuarios = Usuario.query.all(), usuario_seleccionado = None )
         else:
-            return render_template('listar_comentario_usuario.html', usuarios= None, usuario_selec = Usuario.query.get(request.form['usuarios'])) 
+            return render_template('listar_comentario_usuario.html', usuarios= None, usuario_selec = Usuario.query.get(request.form['usuarios']))
     else:
-        return render_template('listar_comentario_usuario.html', usuarios = Usuario.query.all(), usuario_selec = None )   
-        
-
-if __name__ == '__main__':
-	db.create_all()
-	app.run(debug = True)	
+        return render_template('listar_comentario_usuario.html', usuarios = Usuario.query.all(), usuario_selec = None )
