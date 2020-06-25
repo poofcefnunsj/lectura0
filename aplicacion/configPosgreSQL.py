@@ -1,0 +1,3 @@
+SECRET_KEY="7rySeVvfP33Hhfe3kVepyUIjzRwqev5EIpmwliX4"
+SQLALCHEMY_DATABASE_URI='postgres://jehoqzleisvner:a3c1997cea99340b8829393b9f33c2a39907ae4bae73d84d926d7f89afd332d3@ec2-54-147-209-121.compute-1.amazonaws.com:5432/da8355fdvfpe43'
+SQLALCHEMY_TRACK_MODIFICATIONS=False
