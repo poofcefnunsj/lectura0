@@ -1,8 +1,8 @@
 import click
 from flask.cli import with_appcontext
 
-from aplicacion.extensions import db
-from aplicacion.models import Usuario, Comentario
+from extensions import db
+from models import Usuario, Comentario
 
 @click.command(name='create_tables')
 @with_appcontext
